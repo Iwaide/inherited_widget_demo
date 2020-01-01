@@ -1,6 +1,5 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -34,9 +33,8 @@ class _HomePageState extends State<_HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return _Inherited(
-      message: _createMessage(),
-      count: _count,
+    return Provider<String>.value(
+      value: _createMessage(),
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.refresh),
@@ -66,38 +64,12 @@ class _Message extends StatelessWidget {
   Widget build(BuildContext context) {
     print('_Message: rebuild');
     return Text(
-      'Message${_Inherited.of(context, listen: true).count}: ${_Inherited.of(
+      'Message: ${Provider.of<String>(
         context,
-        listen: true,
-      ).message}',
+      )}',
       style: TextStyle(fontSize: 64.0),
     );
   }
-}
-
-class _Inherited extends InheritedWidget {
-  const _Inherited({
-    Key key,
-    @required this.message,
-    @required this.count,
-    @required Widget child,
-  }) : super(key: key, child: child);
-
-  final String message;
-  final int count;
-  
-  static _Inherited of(
-    BuildContext context, {
-      @required bool listen,
-    }) {
-      return listen
-        ? context.dependOnInheritedWidgetOfExactType<_Inherited>()
-        : context.getElementForInheritedWidgetOfExactType<_Inherited>()
-            .widget as _Inherited;
-    }
-  
-  @override
-  bool updateShouldNotify(_Inherited old) => message != old.message;
 }
 
 
